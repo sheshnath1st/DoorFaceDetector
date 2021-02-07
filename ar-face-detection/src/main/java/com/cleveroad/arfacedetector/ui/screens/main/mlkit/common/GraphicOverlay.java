@@ -14,14 +14,21 @@
 package com.cleveroad.arfacedetector.ui.screens.main.mlkit.common;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
+import com.cleveroad.arfacedetector.ui.screens.main.mlkit.face_detection_heplers.FaceDetectionProcessor;
 import com.google.android.gms.vision.CameraSource;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.cleveroad.arfacedetector.ui.screens.main.mlkit.common.CameraSource.bitmaps;
+import static com.cleveroad.arfacedetector.ui.screens.main.mlkit.common.CameraSource.sleepTime;
+import static com.cleveroad.arfacedetector.ui.screens.main.mlkit.common.CameraSource.waitForNextFrame;
 
 /**
  * A view which renders a series of custom graphics to be overlayed on top of an associated preview
@@ -183,6 +190,18 @@ public class GraphicOverlay extends View {
 
             for (Graphic graphic : graphics) {
                 graphic.draw(canvas);
+                sleepTime++;
+                if(graphics.size()==2){
+                    Log.d("","============    Face is Recognize    ============");
+                    if(sleepTime%10==0){
+                        bitmaps.add(FaceDetectionProcessor.Companion.getDetector1());
+                    }
+                    if(sleepTime>50){
+                        sleepTime=0;
+                        waitForNextFrame=true;
+                    }
+                }
+
             }
         }
     }

@@ -18,6 +18,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
@@ -30,6 +31,7 @@ import android.view.WindowManager;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresPermission;
 
+import com.cleveroad.arfacedetector.ui.screens.main.mlkit.FaceDetectListener;
 import com.google.android.gms.common.images.Size;
 
 import java.io.IOException;
@@ -109,7 +111,7 @@ public class CameraSource {
     private Thread processingThread;
 
     private final FrameProcessingRunnable processingRunnable;
-
+    public static ArrayList<Bitmap> bitmaps = new ArrayList<>();
     private final Object processorLock = new Object();
     // @GuardedBy("processorLock")
     private VisionImageProcessor frameProcessor;
@@ -125,11 +127,11 @@ public class CameraSource {
      */
     private final Map<byte[], ByteBuffer> bytesToByteBuffer = new IdentityHashMap<>();
 
-    public CameraSource(Activity activity, GraphicOverlay overlay) {
+    public CameraSource(Activity activity, GraphicOverlay overlay, FaceDetectListener faceDetectListener) {
         this.activity = activity;
         graphicOverlay = overlay;
         graphicOverlay.clear();
-        processingRunnable = new FrameProcessingRunnable();
+        processingRunnable = new FrameProcessingRunnable(faceDetectListener);
 
         if (Camera.getNumberOfCameras() == 1) {
             CameraInfo cameraInfo = new CameraInfo();
@@ -602,6 +604,8 @@ public class CameraSource {
         }
     }
 
+    public static boolean waitForNextFrame = false;
+
     /**
      * This runnable controls access to the underlying receiver, calling it to process frames when
      * available from the camera. This is designed to run detection on frames as fast as possible
@@ -617,11 +621,16 @@ public class CameraSource {
         // This lock guards all of the member variables below.
         private final Object lock = new Object();
         private boolean active = true;
+        FaceDetectListener faceDetectListener;
 
         // These pending variables hold the state associated with the new frame awaiting processing.
         private ByteBuffer pendingFrameData;
 
         FrameProcessingRunnable() {
+        }
+
+        public FrameProcessingRunnable(FaceDetectListener faceDetectListener) {
+            this.faceDetectListener = faceDetectListener;
         }
 
         /**
@@ -714,6 +723,11 @@ public class CameraSource {
                     // recycled back to the camera before we are done using that data.
                     data = pendingFrameData;
                     pendingFrameData = null;
+//                    try {
+//                        Thread.sleep(sleepTime);
+//                    } catch (Exception e) {
+//                        Log.d(TAG, "Frame processing loop terminated.", e);
+//                    }
                 }
 
                 // The code below needs to run outside of synchronization, because this will allow
@@ -727,6 +741,22 @@ public class CameraSource {
                                 data,
                                 new FrameMetadata(previewSize.getWidth(), previewSize.getHeight(), rotation, facing),
                                 graphicOverlay);
+                        long timeStamp = System.currentTimeMillis();
+                        int count = 0;
+                        while (waitForNextFrame) {
+                            try {
+                                if (((System.currentTimeMillis() - timeStamp) / 1000) > 10) {
+                                    waitForNextFrame = false;
+                                }
+                                if (count == 0) {
+                                    faceDetectListener.onSuccess(bitmaps);
+                                    bitmaps.clear();
+                                }
+                                count++;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 } catch (Throwable t) {
                     Log.e(TAG, "Exception thrown from receiver.", t);
@@ -743,4 +773,6 @@ public class CameraSource {
     private void cleanScreen() {
         graphicOverlay.clear();
     }
+
+    public static int sleepTime = 0;
 }

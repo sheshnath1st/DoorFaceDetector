@@ -1,6 +1,7 @@
 package com.cleveroad.arfacedetector.ui.screens.main.mlkit
 
 import android.Manifest.permission.CAMERA
+import android.graphics.Bitmap
 import android.hardware.Camera
 import android.os.Bundle
 import android.util.Log
@@ -22,13 +23,15 @@ import java.io.IOException
 
 
 class FaceDetectorFragment : BaseLifecycleFragment(), CompoundButton.OnCheckedChangeListener {
+    private var faceDetectListener: FaceDetectListener? = null
 
     companion object {
         private val LOG_TAG = this::class.java.simpleName
         private const val RES_ID_EXTRA = "res_id"
 
-        fun newInstance(@DrawableRes resId: Int) =
+        fun newInstance(@DrawableRes resId: Int, faceDetectListener: FaceDetectListener) =
                 FaceDetectorFragment().apply {
+                    this.faceDetectListener = faceDetectListener
                     arguments = Bundle().apply {
                         putInt(RES_ID_EXTRA, resId)
                     }
@@ -92,7 +95,7 @@ class FaceDetectorFragment : BaseLifecycleFragment(), CompoundButton.OnCheckedCh
                 cameraSourcePreview ?: Log.d(LOG_TAG, "resume: Preview is null")
                 faceOverlay ?: Log.d(LOG_TAG, "resume: graphOverlay is null")
                 safeLet(cameraSourcePreview, faceOverlay) { firePreview, fireFaceOverlay ->
-                    firePreview.start(cameraSource, fireFaceOverlay)
+                    firePreview.start(cameraSource, fireFaceOverlay,faceDetectListener)
                 }
             } catch (e: IOException) {
                 Log.e(LOG_TAG, "Unable to start camera source.", e)
@@ -105,7 +108,7 @@ class FaceDetectorFragment : BaseLifecycleFragment(), CompoundButton.OnCheckedCh
     private fun createCameraSource() {
         // If there's no existing cameraSource, create one.
         if (cameraSource == null) {
-            cameraSource = CameraSource(activity, faceOverlay)
+            cameraSource = CameraSource(activity, faceOverlay,faceDetectListener)
         }
         safeLet(context, arguments?.getInt(RES_ID_EXTRA)) { context, resId ->
             BitmapUtils.getBitmapFromVectorDrawable(context, resId)?.let {

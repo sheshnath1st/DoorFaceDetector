@@ -5,5 +5,18 @@
     <color name="pink_800">#ad1457</color>
     <color name="red_700">#d32f2f</color>
     <color name="red_900">#b71c1c</color>
+    <color name="black">#000</color>
 
+
+    <color name="colorSuccess">#32CD32</color>
+    <color name="colorWarning">#FF8C00</color>
+    <color name="colorError">#CC0000</color>
+
+
+    <color name="white">#ffffff</color>
+    <color name="grey">#E9EAEE</color>
+    <color name="yellow">#F8BA0F</color>
+    <color name="goodgrey">#535353</color>
+    <color name="blue">#293859</color>
+    <color name="lightgrey">#EEEEEE</color>
 </resources>

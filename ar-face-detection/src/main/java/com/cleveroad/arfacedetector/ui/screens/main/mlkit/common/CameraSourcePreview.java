@@ -22,6 +22,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
 
+import com.cleveroad.arfacedetector.ui.screens.main.mlkit.FaceDetectListener;
 import com.google.android.gms.common.images.Size;
 
 import java.io.IOException;
@@ -63,9 +64,10 @@ public class CameraSourcePreview extends ViewGroup {
             startIfReady();
         }
     }
-
-    public void start(CameraSource cameraSource, GraphicOverlay overlay) throws IOException {
+    FaceDetectListener faceDetectListener;
+    public void start(CameraSource cameraSource, GraphicOverlay overlay, FaceDetectListener faceDetectListener) throws IOException {
         this.overlay = overlay;
+        this.faceDetectListener=faceDetectListener;
         start(cameraSource);
     }
 

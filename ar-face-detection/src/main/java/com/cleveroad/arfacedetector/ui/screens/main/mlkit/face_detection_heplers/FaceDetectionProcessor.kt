@@ -17,11 +17,12 @@ import java.io.IOException
 
 
 class FaceDetectionProcessor(private val overlayBitmap: Bitmap) : BaseVisionProcessor<List<FirebaseVisionFace>>() {
-    companion object {
 
+    companion object {
         private val TAG = "FaceDetectionProcessor"
 
         private const val MIN_FACE_SIZE = 0.4F
+        public var detector1: Bitmap? =null
     }
 
     private val detector: FirebaseVisionFaceDetector
@@ -55,6 +56,7 @@ class FaceDetectionProcessor(private val overlayBitmap: Bitmap) : BaseVisionProc
                            frameMetadata: FrameMetadata,
                            graphicOverlay: GraphicOverlay) {
         graphicOverlay.clear()
+        detector1=originalCameraImage
         graphicOverlay.add(CameraImageGraphic(graphicOverlay, originalCameraImage))
         for (i in results.indices) {
             val face = results[i]
