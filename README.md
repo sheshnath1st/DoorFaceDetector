@@ -1,6 +1,6 @@
-# ARFaceDetection [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome) <img src="https://www.cleveroad.com/public/comercial/label-android.svg" height="19"> <a href="https://www.cleveroad.com/?utm_source=github&utm_medium=label&utm_campaign=contacts"><img src="https://www.cleveroad.com/public/comercial/label-cleveroad.svg" height="19"></a>
+# FaceDetection [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome) <img src="https://www.cleveroad.com/public/comercial/label-android.svg" height="19"> <a href="https://www.cleveroad.com/?utm_source=github&utm_medium=label&utm_campaign=contacts"><img src="https://www.cleveroad.com/public/comercial/label-cleveroad.svg" height="19"></a>
 ![Header image](/images/header.png)
-## Meet ARFaceDetection by Cleveroad
+## Meet FaceDetection by Cleveroad
 We’re glad to share with you our latest AR-based library for Android. It’s designed with ARCore technology and is capable of detecting faces and overlaying images above the user’s head considering multiple parameters to make them look realistic (e.g. head movements).
 
 ![Demo image](/images/demo_.gif)
@@ -12,11 +12,11 @@ You can try the functionality of the library right on your devices! Go to this l
 [![Awesome](/images/logo-footer_.png)](https://www.cleveroad.com/?utm_source=github&utm_medium=label&utm_campaign=contacts)
 <br/>
 ## Setup
-To use ARFaceDetection first add dependency to your project:
+To use FaceDetection first add dependency to your project:
 ```groovy
 dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.9'
-    implementation 'com.cleveroad.ARFaceDetection:ar-face-detection:1.0.2'
+    implementation 'com.cleveroad.FaceDetection:ar-face-detection:1.0.2'
 }
 ```
 AndroidManifest
@@ -81,7 +81,7 @@ See [changelog history].
 <br />
 #### Support ####
 * * *
-If you have any other questions regarding the use of this library, please contact us for support at info@cleveroad.com (email subject: "ARFaceDetection. Support request.") 
+If you have any other questions regarding the use of this library, please contact us for support at info@cleveroad.com (email subject: "FaceDetection. Support request.") 
 <br />
 #### License ####
 * * *
